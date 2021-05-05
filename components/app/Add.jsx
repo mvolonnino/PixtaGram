@@ -3,12 +3,12 @@ import { View, Text } from "react-native";
 
 import { mainStyles } from "../../styles";
 
-const Feed = () => {
+const Add = () => {
   return (
     <View style={mainStyles.container}>
-      <Text>Feed Screen</Text>
+      <Text>Add Screen</Text>
     </View>
   );
 };
 
-export default Feed;
+export default Add;
