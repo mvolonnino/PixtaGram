@@ -40,8 +40,12 @@ const Main = ({ fetchUser, currentUser }) => {
           }),
       })}
       tabBarOptions={{
-        activeTintColor: "tomato",
-        inactiveTintColor: "gray",
+        activeTintColor: "cyan",
+        inactiveTintColor: "lightgray",
+        showLabel: false,
+        style: {
+          backgroundColor: "#051426",
+        },
       }}
     >
       <Tab.Screen name="Feed" component={Feed} />
