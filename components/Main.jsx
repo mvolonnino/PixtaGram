@@ -15,7 +15,7 @@ const Main = ({ fetchUser, currentUser }) => {
 
   return (
     <View style={mainStyles.container}>
-      <Text>Main Screen</Text>
+      {currentUser && <Text>{currentUser.name} is logged in</Text>}
     </View>
   );
 };
