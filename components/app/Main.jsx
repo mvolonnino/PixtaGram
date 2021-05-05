@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import { fetchUser } from "../../redux/actions";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Feed, Profile, Add } from "../app";
+import { Feed, Profile } from "../app";
 import { handleTabIcon } from "../../helpers";
 
 const Tab = createBottomTabNavigator();
@@ -20,6 +20,10 @@ const mapDispatchProps = (dispatch) =>
     },
     dispatch
   );
+
+const EmptyScreen = () => {
+  return null;
+};
 
 const Main = ({ fetchUser, currentUser }) => {
   console.log({ currentUser });
@@ -49,7 +53,16 @@ const Main = ({ fetchUser, currentUser }) => {
       }}
     >
       <Tab.Screen name="Feed" component={Feed} />
-      <Tab.Screen name="Add" component={Add} />
+      <Tab.Screen
+        name="MainAdd"
+        component={EmptyScreen}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            event.preventDefault();
+            navigation.navigate("Add");
+          },
+        })}
+      />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );

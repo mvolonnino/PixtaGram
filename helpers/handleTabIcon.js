@@ -11,7 +11,7 @@ const handleTabIcon = ({ route, focused, color, size }) => {
     case "Feed":
       iconName = focused ? "home" : "home-outline";
       return <Ionicons name={iconName} size={size} color={color} />;
-    case "Add":
+    case "MainAdd":
       size = 24;
       iconName = focused ? "picture" : "picture";
       return focused ? (

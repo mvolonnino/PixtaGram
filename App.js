@@ -10,7 +10,7 @@ import thunk from "redux-thunk";
 import { auth } from "./firebaseConfig";
 
 import { Landing, Register, Login } from "./components/auth";
-import { Main } from "./components/app";
+import { Main, Add } from "./components/app";
 import { Loading } from "./components";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -47,6 +47,7 @@ const App = () => {
                 component={Main}
                 options={{ headerShown: false }}
               />
+              <Stack.Screen name="Add" component={Add} />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>
