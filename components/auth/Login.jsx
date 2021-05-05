@@ -22,6 +22,7 @@ const Login = () => {
         console.log(error);
       });
   };
+
   return (
     <View style={landingStyles.container}>
       <TextInput

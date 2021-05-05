@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
+import firebase from "firebase";
 
 import { auth } from "../../firebaseConfig";
 import { landingStyles } from "../../styles/Landing";
@@ -18,6 +19,10 @@ const Register = () => {
       .createUserWithEmailAndPassword(email, password)
       .then((res) => {
         console.log("registered new user => ", { res });
+        firebase.firestore().collection("users").doc(auth.currentUser.uid).set({
+          name,
+          email,
+        });
       })
       .catch((error) => {
         console.log({ error });
