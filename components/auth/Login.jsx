@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, Button } from "react-native";
 
 import { auth } from "../../firebaseConfig";
-import { landingStyles } from "../../styles/Landing";
+import { landingStyles } from "../../styles";
 
 const Login = () => {
   const [info, setInfo] = useState({

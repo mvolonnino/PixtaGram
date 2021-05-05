@@ -3,7 +3,7 @@ import { View, Button, TextInput, StyleSheet } from "react-native";
 import firebase from "firebase";
 
 import { auth } from "../../firebaseConfig";
-import { landingStyles } from "../../styles/Landing";
+import { landingStyles } from "../../styles";
 
 const Register = () => {
   const [info, setInfo] = useState({

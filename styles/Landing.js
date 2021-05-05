@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const landingStyles = StyleSheet.create({
+const landingStyles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -16,3 +16,5 @@ export const landingStyles = StyleSheet.create({
     width: "100%",
   },
 });
+
+export default landingStyles;

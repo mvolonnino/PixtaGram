@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./redux/reducers";
+import thunk from "redux-thunk";
 
+const store = createStore(rootReducer, applyMiddleware(thunk));
 const Stack = createStackNavigator();
 import { landingStyles } from "./styles/Landing";
 import { Landing, Register, Login } from "./components/auth";
-import { Loading } from "./components";
+import { Loading, Main } from "./components";
 import { auth } from "./firebaseConfig";
 
 const App = () => {
@@ -32,9 +37,9 @@ const App = () => {
   return (
     <NavigationContainer>
       {loggedIn ? (
-        <View style={landingStyles.container}>
-          <Text>Logged In!</Text>
-        </View>
+        <Provider store={store}>
+          <Main />
+        </Provider>
       ) : (
         <Stack.Navigator initialRouteName="Landing">
           <Stack.Screen
