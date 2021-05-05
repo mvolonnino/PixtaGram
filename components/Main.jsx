@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -6,7 +6,9 @@ import { fetchUser } from "../redux/actions";
 
 import { mainStyles } from "../styles";
 
-const Main = () => {
+const Main = ({ fetchUser, currentUser }) => {
+  console.log({ currentUser });
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -20,6 +22,9 @@ const Main = () => {
 
 const styles = StyleSheet.create({});
 
+const mapStateToProps = (store) => ({
+  currentUser: store.userState.currentUser,
+});
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
     {
@@ -28,4 +33,4 @@ const mapDispatchProps = (dispatch) =>
     dispatch
   );
 
-export default connect(null, mapDispatchProps)(Main);
+export default connect(mapStateToProps, mapDispatchProps)(Main);
