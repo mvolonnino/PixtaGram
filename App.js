@@ -7,12 +7,14 @@ import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./redux/reducers";
 import thunk from "redux-thunk";
 
+import { auth } from "./firebaseConfig";
+
+import { Landing, Register, Login } from "./components/auth";
+import { Main } from "./components/app";
+import { Loading } from "./components";
+
 const store = createStore(rootReducer, applyMiddleware(thunk));
 const Stack = createStackNavigator();
-import { landingStyles } from "./styles/Landing";
-import { Landing, Register, Login } from "./components/auth";
-import { Loading, Main } from "./components";
-import { auth } from "./firebaseConfig";
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,31 +37,41 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
+    <>
       {loggedIn ? (
         <Provider store={store}>
-          <Main />
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Main">
+              <Stack.Screen
+                name="Main"
+                component={Main}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
         </Provider>
       ) : (
-        <Stack.Navigator initialRouteName="Landing">
-          <Stack.Screen
-            name="Landing"
-            component={Landing}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Register"
-            component={Register}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Landing">
+            <Stack.Screen
+              name="Landing"
+              component={Landing}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
       )}
-    </NavigationContainer>
+    </>
   );
 };
 

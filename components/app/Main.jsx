@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { fetchUser } from "../redux/actions";
+import { fetchUser } from "../../redux/actions";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { mainStyles } from "../styles";
+import { Feed } from "../app";
+
+const Tab = createBottomTabNavigator();
 
 const Main = ({ fetchUser, currentUser }) => {
   console.log({ currentUser });
@@ -14,9 +17,9 @@ const Main = ({ fetchUser, currentUser }) => {
   }, []);
 
   return (
-    <View style={mainStyles.container}>
-      {currentUser && <Text>{currentUser.name} is logged in</Text>}
-    </View>
+    <Tab.Navigator>
+      <Tab.Screen name="Feed" component={Feed} />
+    </Tab.Navigator>
   );
 };
 
