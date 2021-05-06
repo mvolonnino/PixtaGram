@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { Camera } from "expo-camera";
 import { MaterialIcons } from "react-native-vector-icons/";
 import * as ImagePicker from "expo-image-picker";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function CameraFeature({ navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -11,6 +12,7 @@ export default function CameraFeature({ navigation }) {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [frontFacing, setFrontFacing] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     (async () => {
@@ -42,7 +44,6 @@ export default function CameraFeature({ navigation }) {
           let {
             status,
           } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          console.log({ status });
           if (status === "denied") {
             setHasGalleryPermission(false);
             alert("Sorry, we need camera roll permissions to make this work!");
@@ -84,12 +85,14 @@ export default function CameraFeature({ navigation }) {
   return (
     <>
       <View style={styles.cameraContainer}>
-        <Camera
-          style={styles.fixedRatio}
-          type={type}
-          ratio={"1:1"}
-          ref={(ref) => setCamera(ref)}
-        ></Camera>
+        {isFocused && (
+          <Camera
+            style={styles.fixedRatio}
+            type={type}
+            ratio={"1:1"}
+            ref={(ref) => setCamera(ref)}
+          ></Camera>
+        )}
       </View>
       <MaterialIcons
         name="flip-camera-android"
