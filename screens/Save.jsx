@@ -6,16 +6,20 @@ require("firebase/firestore");
 require("firebase/firebase-storage");
 import uuid from "uuid";
 
+import { AnimatedUpload } from "../components/app";
+
 const Save = (props) => {
   const { image } = props.route.params;
   const [caption, setCaption] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const handleUploadImage = async () => {
     const id = uuid.v4();
     const response = await fetch(image);
     const blob = await response.blob();
     const childPath = `post/${auth.currentUser.uid}/${id}`;
-    console.log({ childPath });
+
+    setUploading(true);
 
     const task = firebase.storage().ref().child(childPath).put(blob);
 
@@ -26,7 +30,6 @@ const Save = (props) => {
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
         savePostData(snapshot);
-        console.log(snapshot);
       });
     };
 
@@ -48,6 +51,7 @@ const Save = (props) => {
       })
       .then(() => {
         props.navigation.popToTop();
+        setUploading(false);
       });
   };
 
@@ -63,6 +67,7 @@ const Save = (props) => {
         />
       </View>
       <Button title="Upload Image" onPress={() => handleUploadImage()} />
+      {uploading ? <AnimatedUpload uploading={uploading} /> : null}
     </View>
   );
 };
