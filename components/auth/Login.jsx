@@ -12,6 +12,7 @@ const Login = () => {
 
   const signInUser = () => {
     const { email, password } = info;
+    console.log({ info });
 
     auth
       .signInWithEmailAndPassword(email, password)
@@ -27,13 +28,15 @@ const Login = () => {
     <View style={landingStyles.container}>
       <TextInput
         placeholder="email"
-        onChangeText={(email) => setInfo({ ...info, email })}
+        onChangeText={(value) =>
+          setInfo({ ...info, email: value.toLowerCase().trim() })
+        }
         style={landingStyles.textInput}
       />
       <TextInput
         placeholder="password"
         secureTextEntry={true}
-        onChangeText={(password) => setInfo({ ...info, password })}
+        onChangeText={(value) => setInfo({ ...info, password: value.trim() })}
         style={landingStyles.textInput}
       />
 

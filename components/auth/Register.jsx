@@ -33,18 +33,20 @@ const Register = () => {
     <View style={landingStyles.container}>
       <TextInput
         placeholder="Name"
-        onChangeText={(name) => setInfo({ ...info, name })}
+        onChangeText={(value) => setInfo({ ...info, name: value.trim() })}
         style={landingStyles.textInput}
       />
       <TextInput
         placeholder="Email"
-        onChangeText={(email) => setInfo({ ...info, email })}
+        onChangeText={(value) =>
+          setInfo({ ...info, email: value.toLowerCase().trim() })
+        }
         style={landingStyles.textInput}
       />
       <TextInput
         placeholder="Password"
         secureTextEntry={true}
-        onChangeText={(password) => setInfo({ ...info, password })}
+        onChangeText={(value) => setInfo({ ...info, password: value.trim() })}
         style={landingStyles.textInput}
       />
       <Button title="Register" onPress={() => registerUser()} />

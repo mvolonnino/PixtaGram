@@ -34,6 +34,7 @@ const Main = ({ fetchUser, currentUser }) => {
 
   return (
     <Tab.Navigator
+      initialRouteName="Feed"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) =>
           handleTabIcon({
@@ -54,7 +55,7 @@ const Main = ({ fetchUser, currentUser }) => {
     >
       <Tab.Screen name="Feed" component={Feed} />
       <Tab.Screen
-        name="MainAdd"
+        name="AddContainer"
         component={EmptyScreen}
         listeners={({ navigation }) => ({
           tabPress: (event) => {
