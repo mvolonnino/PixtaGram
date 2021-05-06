@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { Camera } from "expo-camera";
 import { MaterialIcons } from "react-native-vector-icons/";
+import * as ImagePicker from "expo-image-picker";
 
-export default function CameraFeature() {
+export default function CameraFeature({ setGalleryPermission }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState(false);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
@@ -31,6 +33,41 @@ export default function CameraFeature() {
         ? Camera.Constants.Type.front
         : Camera.Constants.Type.back
     );
+  };
+
+  const handleGalleryPermission = () => {
+    if (!hasGalleryPermission) {
+      (async () => {
+        if (Platform.OS !== "web") {
+          let {
+            status,
+          } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          console.log({ status });
+          if (status === "denied") {
+            setHasGalleryPermission(false);
+            alert("Sorry, we need camera roll permissions to make this work!");
+          }
+          if (status === "granted") {
+            setHasGalleryPermission(true);
+          }
+        }
+      })();
+    } else {
+      pickImage();
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
   };
 
   if (hasCameraPermission === null) {
@@ -63,20 +100,41 @@ export default function CameraFeature() {
       />
       <View style={styles.pictureContianer}>
         <View style={styles.takePictureBackground}>
-          <MaterialIcons
-            name="camera"
-            size={45}
-            color="white"
-            onPress={() => handleTakePicture()}
-            style={styles.takePictureIcon}
-          />
+          <View style={styles.iconContainer}>
+            <MaterialIcons
+              name="close"
+              size={45}
+              color="white"
+              onPress={() => setImage(null)}
+              style={styles.closeIcon}
+            />
+            <MaterialIcons
+              name="camera"
+              size={45}
+              color="white"
+              onPress={() => handleTakePicture()}
+            />
+            <MaterialIcons
+              name="add-photo-alternate"
+              size={45}
+              color="white"
+              onPress={() => handleGalleryPermission()}
+              style={styles.galleryPickerIcon}
+            />
+          </View>
         </View>
         {image ? (
           <Image
             source={{ uri: image }}
             style={frontFacing ? styles.frontCameraPic : styles.backCameraPic}
           />
-        ) : null}
+        ) : (
+          <View style={styles.noImageContainer}>
+            <Text style={styles.noImageText}>
+              Take a picture or choose from your gallery to see image here
+            </Text>
+          </View>
+        )}
       </View>
     </>
   );
@@ -119,10 +177,30 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
-  takePictureIcon: {
-    alignSelf: "center",
-  },
   takePictureBackground: {
     backgroundColor: "#051426",
+  },
+  iconContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+  galleryPickerIcon: {
+    position: "absolute",
+    right: 10,
+  },
+  closeIcon: {
+    position: "absolute",
+    left: 10,
+  },
+  noImageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noImageText: {
+    fontSize: 16,
+    textAlign: "center",
   },
 });

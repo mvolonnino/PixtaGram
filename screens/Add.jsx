@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { CameraFeature, GalleryFeature } from "../components/app";
+import { CameraFeature } from "../components/app";
 
 export default function Add() {
   return <CameraFeature />;

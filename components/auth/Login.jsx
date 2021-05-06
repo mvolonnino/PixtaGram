@@ -12,7 +12,6 @@ const Login = () => {
 
   const signInUser = () => {
     const { email, password } = info;
-    console.log({ info });
 
     auth
       .signInWithEmailAndPassword(email, password)
