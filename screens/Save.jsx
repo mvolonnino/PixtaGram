@@ -11,7 +11,7 @@ import { AnimatedUpload } from "../components/app";
 const Save = (props) => {
   const { image } = props.route.params;
   const [caption, setCaption] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState(true);
 
   const handleUploadImage = async () => {
     const id = uuid.v4();

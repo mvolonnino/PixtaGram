@@ -7,7 +7,7 @@ const AnimatedUpload = ({ uploading }) => {
     <AnimatedLoader
       visible={uploading}
       overlayColor="rgba(5, 20, 38, .99)"
-      source={require("../../assets/lottie/60207-loader-106.json")}
+      source={require("../../assets/lottie/61-octopus.json")}
       animationStyle={styles.lottie}
       speed={1}
     >
@@ -19,7 +19,7 @@ const AnimatedUpload = ({ uploading }) => {
 const styles = StyleSheet.create({
   lottie: {
     width: 300,
-    height: 300,
+    height: 600,
   },
   uploadingText: {
     color: "white",
