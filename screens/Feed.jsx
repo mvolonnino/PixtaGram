@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-import { mainStyles } from "../../styles";
+import { mainStyles } from "../styles";
 
-const Profile = () => {
+const Feed = () => {
   return (
     <View style={mainStyles.container}>
-      <Text>Profile Screen</Text>
+      <Text>Feed Screen</Text>
     </View>
   );
 };
 
-export default Profile;
+export default Feed;

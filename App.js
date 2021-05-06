@@ -10,7 +10,7 @@ import thunk from "redux-thunk";
 import { auth } from "./firebaseConfig";
 
 import { Landing, Register, Login } from "./components/auth";
-import { Main, Add } from "./components/app";
+import { Main, Add } from "./screens";
 import { Loading } from "./components";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

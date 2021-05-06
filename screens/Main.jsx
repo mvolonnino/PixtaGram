@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { fetchUser } from "../../redux/actions";
+import { fetchUser } from "../redux/actions/index";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Feed, Profile } from "../app";
-import { handleTabIcon } from "../../helpers";
+import { Feed, Profile } from "./index";
+import { handleTabIcon } from "../helpers";
 
 const Tab = createBottomTabNavigator();
 

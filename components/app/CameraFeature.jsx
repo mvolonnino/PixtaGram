@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { Camera } from "expo-camera";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-export default function Add() {
-  const [hasPermission, setHasPermission] = useState(null);
+export default function CameraFeature() {
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
@@ -12,7 +13,7 @@ export default function Add() {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === "granted");
+      setHasCameraPermission(status === "granted");
     })();
   }, []);
 
@@ -32,11 +33,15 @@ export default function Add() {
     );
   };
 
-  if (hasPermission === null) {
+  if (hasCameraPermission === null) {
     return <View />;
   }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+  if (hasCameraPermission === false) {
+    return (
+      <View style={styles.noPermissionContainer}>
+        <Text style={styles.noPermission}>No access to camera</Text>;
+      </View>
+    );
   }
 
   return (
@@ -49,13 +54,23 @@ export default function Add() {
           ref={(ref) => setCamera(ref)}
         ></Camera>
       </View>
-      <Button
-        style={styles.button}
+      <MaterialIcons
+        name="flip-camera-android"
         onPress={() => handleCameraSwitch()}
-        title="Flip Image"
+        size={40}
+        color="gray"
+        style={styles.flipCameraIcon}
       />
       <View style={styles.pictureContianer}>
-        <Button title="Take Picture" onPress={() => handleTakePicture()} />
+        <View style={styles.takePictureBackground}>
+          <MaterialIcons
+            name="camera"
+            size={45}
+            color="white"
+            onPress={() => handleTakePicture()}
+            style={styles.takePictureIcon}
+          />
+        </View>
         {image ? (
           <Image
             source={{ uri: image }}
@@ -70,6 +85,7 @@ export default function Add() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "relative",
   },
   cameraContainer: {
     flex: 1,
@@ -88,5 +104,25 @@ const styles = StyleSheet.create({
   frontCameraPic: {
     flex: 1,
     transform: [{ scaleX: -1 }],
+  },
+  noPermissionContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noPermission: {
+    color: "red",
+  },
+  flipCameraIcon: {
+    alignSelf: "flex-end",
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  takePictureIcon: {
+    alignSelf: "center",
+  },
+  takePictureBackground: {
+    backgroundColor: "#051426",
   },
 });
