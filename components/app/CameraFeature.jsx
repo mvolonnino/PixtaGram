@@ -4,7 +4,7 @@ import { Camera } from "expo-camera";
 import { MaterialIcons } from "react-native-vector-icons/";
 import * as ImagePicker from "expo-image-picker";
 
-export default function CameraFeature({ setGalleryPermission }) {
+export default function CameraFeature({ navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(false);
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -114,20 +114,32 @@ export default function CameraFeature({ setGalleryPermission }) {
               color="white"
               onPress={() => handleTakePicture()}
             />
-            <MaterialIcons
-              name="add-photo-alternate"
-              size={45}
-              color="white"
-              onPress={() => handleGalleryPermission()}
-              style={styles.galleryPickerIcon}
-            />
+            {image ? (
+              <MaterialIcons
+                name="check"
+                size={45}
+                color="white"
+                onPress={() => navigation.navigate("Save", { image })}
+                style={styles.galleryPickerIcon}
+              />
+            ) : (
+              <MaterialIcons
+                name="add-photo-alternate"
+                size={45}
+                color="white"
+                onPress={() => handleGalleryPermission()}
+                style={styles.galleryPickerIcon}
+              />
+            )}
           </View>
         </View>
         {image ? (
-          <Image
-            source={{ uri: image }}
-            style={frontFacing ? styles.frontCameraPic : styles.backCameraPic}
-          />
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: image }}
+              style={frontFacing ? styles.frontCameraPic : styles.backCameraPic}
+            />
+          </View>
         ) : (
           <View style={styles.noImageContainer}>
             <Text style={styles.noImageText}>
@@ -179,6 +191,9 @@ const styles = StyleSheet.create({
   },
   takePictureBackground: {
     backgroundColor: "#051426",
+    borderWidth: 0.5,
+    borderTopColor: "gray",
+    borderBottomColor: "gray",
   },
   iconContainer: {
     flexDirection: "row",
@@ -198,9 +213,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#06182e",
   },
   noImageText: {
     fontSize: 16,
     textAlign: "center",
+    color: "white",
+  },
+  imageContainer: {
+    flex: 1,
   },
 });

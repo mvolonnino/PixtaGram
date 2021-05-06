@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Provider } from "react-redux";
@@ -10,13 +9,13 @@ import thunk from "redux-thunk";
 import { auth } from "./firebaseConfig";
 
 import { Landing, Register, Login } from "./components/auth";
-import { Main, Add } from "./screens";
+import { Main, Add, Save } from "./screens";
 import { Loading } from "./components";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 const Stack = createStackNavigator();
 
-const App = () => {
+const App = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -47,7 +46,16 @@ const App = () => {
                 component={Main}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen name="Add" component={Add} />
+              <Stack.Screen
+                name="Add"
+                component={Add}
+                navigation={navigation}
+              />
+              <Stack.Screen
+                name="Save"
+                component={Save}
+                navigation={navigation}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>
