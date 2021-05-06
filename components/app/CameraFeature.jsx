@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { Camera } from "expo-camera";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { MaterialIcons } from "react-native-vector-icons/";
 
 export default function CameraFeature() {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
