@@ -40,9 +40,9 @@ const App = ({ navigation }) => {
       {loggedIn ? (
         <Provider store={store}>
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Main">
+            <Stack.Navigator initialRouteName="Feed">
               <Stack.Screen
-                name="Main"
+                name="Feed"
                 component={Main}
                 options={{ headerShown: false }}
               />
