@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { fetchUser } from "../redux/actions/index";
+import { fetchUser, fetchUserPosts } from "../redux/actions/index";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Feed, Profile } from "./index";
@@ -11,12 +11,14 @@ const Tab = createBottomTabNavigator();
 
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
+  posts: store.userState.posts,
 });
 
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
     {
       fetchUser,
+      fetchUserPosts,
     },
     dispatch
   );
@@ -25,11 +27,16 @@ const EmptyScreen = () => {
   return null;
 };
 
-const Main = ({ fetchUser, currentUser }) => {
-  console.log({ currentUser });
-
+const Main = ({ fetchUser, fetchUserPosts, currentUser, posts }) => {
   useEffect(() => {
-    fetchUser();
+    if (!currentUser) {
+      fetchUser();
+      console.log({ currentUser });
+    }
+
+    if (posts.length === 0) {
+      fetchUserPosts();
+    }
   }, []);
 
   return (
