@@ -33,8 +33,7 @@ export function fetchUserPosts() {
       .doc(auth.currentUser.uid)
       .collection("userPosts")
       .orderBy("createdAt", "asc")
-      .get()
-      .then((snapshot) => {
+      .onSnapshot((snapshot) => {
         let posts = snapshot.docs.map((doc) => {
           const data = doc.data();
           const doc_id = doc.id;
@@ -45,10 +44,22 @@ export function fetchUserPosts() {
           type: USER_POSTS_STATE_CHANGE,
           posts,
         });
-      })
-      .catch((error) => {
-        console.log(error);
       });
+    // .then((snapshot) => {
+    //   let posts = snapshot.docs.map((doc) => {
+    //     const data = doc.data();
+    //     const doc_id = doc.id;
+
+    //     return { doc_id, ...data };
+    //   });
+    //   dispatch({
+    //     type: USER_POSTS_STATE_CHANGE,
+    //     posts,
+    //   });
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    // });
   };
 }
 

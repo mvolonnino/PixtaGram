@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import { fetchUser, fetchUserPosts } from "../redux/actions/index";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Feed, Profile } from "./index";
+import { Feed, Profile, Search } from "./index";
 import { handleTabIcon } from "../helpers";
 
 const Tab = createBottomTabNavigator();
@@ -70,6 +70,7 @@ const Main = ({ fetchUser, fetchUserPosts, currentUser, posts }) => {
           },
         })}
       />
+      <Tab.Screen name="Search" component={Search} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
