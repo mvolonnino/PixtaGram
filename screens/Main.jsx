@@ -31,7 +31,6 @@ const Main = ({ fetchUser, fetchUserPosts, currentUser, posts }) => {
   useEffect(() => {
     if (!currentUser) {
       fetchUser();
-      console.log({ currentUser });
     }
 
     if (posts.length === 0) {

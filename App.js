@@ -10,7 +10,7 @@ import { auth } from "./firebaseConfig";
 
 import { Landing, Register, Login } from "./components/auth";
 import { Main, Add, Save } from "./screens";
-import { Loading } from "./components";
+import { LoadingAnimation } from "./components";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 const Stack = createStackNavigator();
@@ -24,6 +24,7 @@ const App = ({ navigation }) => {
       console.log({ authUser });
       if (!authUser) {
         setIsLoading(false);
+        setLoggedIn(false);
       } else {
         setIsLoading(false);
         setLoggedIn(true);
@@ -32,7 +33,7 @@ const App = ({ navigation }) => {
   }, []);
 
   if (isLoading) {
-    return <Loading />;
+    return <LoadingAnimation />;
   }
 
   return (

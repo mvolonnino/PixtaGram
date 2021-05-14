@@ -1,6 +1,10 @@
 import db, { auth } from "../../firebaseConfig";
 
-import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE } from "../constants/index";
+import {
+  USER_STATE_CHANGE,
+  USER_POSTS_STATE_CHANGE,
+  USER_LOGOUT,
+} from "../constants/index";
 
 export function fetchUser() {
   return (dispatch) => {
@@ -44,6 +48,21 @@ export function fetchUserPosts() {
       })
       .catch((error) => {
         console.log(error);
+      });
+  };
+}
+
+export function signOutUser() {
+  return (dispatch) => {
+    auth
+      .signOut()
+      .then(() => {
+        dispatch({
+          type: USER_LOGOUT,
+        });
+      })
+      .catch((err) => {
+        console.log("error signing out user => ", err);
       });
   };
 }
