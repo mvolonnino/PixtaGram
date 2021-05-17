@@ -21,11 +21,17 @@ const mapDispatchProps = (dispatch) =>
 
 const Profile = ({ signOutUser, posts, currentUser }) => {
   const [loading, setLoading] = useState(true);
+  const [noPosts, setNoPosts] = useState(false);
   console.log({ posts, currentUser });
 
   useEffect(() => {
     if (posts.length === 0) {
       fetchUserPosts();
+
+      if (posts.length === 0) {
+        setNoPosts(true);
+        setLoading(false);
+      }
     }
     if (posts.length > 0) {
       setTimeout(() => {
@@ -37,11 +43,15 @@ const Profile = ({ signOutUser, posts, currentUser }) => {
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
-        <Text>{currentUser?.name}</Text>
+        <Text>{currentUser?.displayName}</Text>
         <Text>{currentUser?.email}</Text>
       </View>
       {loading ? (
         <LoadingAnimation />
+      ) : noPosts ? (
+        <View style={styles.noPostContainer}>
+          <Text>You have not posted anything yet!</Text>
+        </View>
       ) : (
         <View style={styles.postsContainer}>
           <FlatList
@@ -56,6 +66,7 @@ const Profile = ({ signOutUser, posts, currentUser }) => {
                 />
               </View>
             )}
+            keyExtractor={(item) => item.doc_id}
           />
         </View>
       )}
@@ -77,12 +88,20 @@ const styles = StyleSheet.create({
   postsContainer: {
     flex: 1,
   },
+  noPostContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   image: {
     flex: 1,
     aspectRatio: 1 / 1,
   },
   imageContainer: {
     flex: 1 / 3,
+    borderWidth: 1,
+    borderColor: "#051426",
+    margin: 1,
   },
 });
 
