@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, StyleSheet, Button } from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { Avatar } from "react-native-elements";
+
 import { fetchUserPosts, signOutUser } from "../redux/actions";
-import LoadingAnimation from "../components/LoadingAnimation";
+import { ProfileSkeleton } from "../components/app";
+import db, { auth } from "../firebaseConfig";
+import { fetchSearchUserPosts, fetchSearchUserInfo } from "../helpers";
 
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
@@ -19,17 +24,47 @@ const mapDispatchProps = (dispatch) =>
     dispatch
   );
 
-const Profile = ({ signOutUser, posts, currentUser }) => {
+const Profile = ({ signOutUser, posts, currentUser, route }) => {
+  const [userPosts, setUserPosts] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [noPosts, setNoPosts] = useState(false);
-  console.log({ posts, currentUser });
+  const [passedUID, setPassedUID] = useState(route.params.profile.uid);
+
+  useEffect(() => {
+    setUser(null);
+    setUserPosts([]);
+    setLoading(true);
+    setPassedUID(route.params.profile.uid);
+  }, [route.params.profile.uid]);
+
+  useEffect(() => {
+    if (passedUID === auth.currentUser.uid) {
+      setUser(currentUser);
+      setUserPosts(posts);
+    } else {
+      setLoading(true);
+      fetchSearchUserInfo(passedUID)
+        .then((res) => {
+          setUser(res);
+        })
+        .catch((error) => {
+          console.log({ error });
+        });
+      fetchSearchUserPosts(passedUID)
+        .then((res) => {
+          setUserPosts(res);
+        })
+        .catch((error) => {
+          console.log({ error });
+        });
+    }
+  }, [passedUID]);
 
   useEffect(() => {
     if (posts.length === 0) {
       fetchUserPosts();
 
       if (posts.length === 0) {
-        setNoPosts(true);
         setLoading(false);
       }
     }
@@ -38,37 +73,59 @@ const Profile = ({ signOutUser, posts, currentUser }) => {
         setLoading(false);
       }, 1500);
     }
-  }, [posts]);
+  }, [passedUID]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.infoContainer}>
-        <Text>{currentUser?.displayName}</Text>
-        <Text>{currentUser?.email}</Text>
-      </View>
       {loading ? (
-        <LoadingAnimation />
-      ) : noPosts ? (
+        <ProfileSkeleton />
+      ) : userPosts.length === 0 ? (
         <View style={styles.noPostContainer}>
-          <Text>You have not posted anything yet!</Text>
+          <FontAwesome name="frown-o" size={60} />
+          <Text>No Posts To Show!</Text>
         </View>
       ) : (
-        <View style={styles.postsContainer}>
-          <FlatList
-            numColumns={3}
-            horizontal={false}
-            data={posts}
-            renderItem={({ item }) => (
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri: item.downloadURL }}
-                  style={styles.image}
-                />
-              </View>
-            )}
-            keyExtractor={(item) => item.doc_id}
-          />
-        </View>
+        <>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                position: "relative",
+                backgroundColor: "#051426",
+                borderRadius: 50,
+              }}
+            >
+              <Avatar
+                rounded
+                size={55}
+                icon={{ name: "user", type: "font-awesome" }}
+              />
+              <Avatar.Accessory
+                style={{ position: "absolute", right: 0, bottom: 0 }}
+                size={20}
+              />
+            </View>
+            <View style={styles.infoContainer}>
+              <Text>{user?.displayName}</Text>
+              <Text>{user?.email}</Text>
+            </View>
+          </View>
+          <View style={styles.postsContainer}>
+            <FlatList
+              numColumns={3}
+              horizontal={false}
+              data={userPosts}
+              renderItem={({ item }) => (
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={{ uri: item.downloadURL }}
+                    style={styles.image}
+                  />
+                </View>
+              )}
+              keyExtractor={(item) => item.uid}
+            />
+          </View>
+        </>
       )}
       <View>
         <Button title="Logout" onPress={() => signOutUser()} />
@@ -80,7 +137,8 @@ const Profile = ({ signOutUser, posts, currentUser }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
+    marginTop: 50,
+    padding: 20,
   },
   infoContainer: {
     margin: 20,

@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Feed, Profile, Search } from "./index";
 import { handleTabIcon } from "../helpers";
+import { auth } from "../firebaseConfig";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +28,13 @@ const EmptyScreen = () => {
   return null;
 };
 
-const Main = ({ fetchUser, fetchUserPosts, currentUser, posts }) => {
+const Main = ({
+  fetchUser,
+  fetchUserPosts,
+  currentUser,
+  posts,
+  navigation,
+}) => {
   useEffect(() => {
     if (!currentUser) {
       fetchUser();
@@ -70,8 +77,17 @@ const Main = ({ fetchUser, fetchUserPosts, currentUser, posts }) => {
           },
         })}
       />
-      <Tab.Screen name="Search" component={Search} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Search" navigation={navigation} component={Search} />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            event.preventDefault();
+            navigation.navigate("Profile", { profile: auth.currentUser });
+          },
+        })}
+      />
     </Tab.Navigator>
   );
 };

@@ -6,36 +6,39 @@ import {
   FlatList,
   StyleSheet,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 
 import db from "../firebaseConfig";
 require("firebase/firestore");
 
-const Search = () => {
+const Search = ({ navigation }) => {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
-  console.log({ users });
 
   const fetchUsers = (searchParam) => {
-    console.log(searchParam);
     db.collection("users")
       .where("nameSearchArr", "array-contains", searchParam)
       .get()
       .then((snapshot) => {
         let users = snapshot.docs.map((doc) => {
           const data = doc.data();
-          const doc_id = doc.id;
+          const uid = doc.id;
 
-          return { doc_id, ...data };
+          return { uid, ...data };
         });
         setUsers(users);
       });
   };
 
   const renderItem = ({ item }) => (
-    <View key={item.doc_id}>
-      <Text>{item.displayName}</Text>
-    </View>
+    <ScrollView key={item.uid}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Profile", { profile: item })}
+      >
+        <Text>{item.displayName}</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 
   useEffect(() => {
@@ -60,7 +63,7 @@ const Search = () => {
           horizontal={false}
           data={users}
           renderItem={renderItem}
-          keyExtractor={(item) => item.doc_id}
+          keyExtractor={(item) => item.uid}
         />
       ) : null}
     </View>

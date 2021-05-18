@@ -7,6 +7,8 @@ import {
 } from "../constants/index";
 
 export function fetchUser() {
+  console.log("fetching user info...");
+
   return (dispatch) => {
     db.collection("users")
       .doc(auth.currentUser.uid)
@@ -28,6 +30,8 @@ export function fetchUser() {
 }
 
 export function fetchUserPosts() {
+  console.log("fetching user posts...");
+
   return (dispatch) => {
     db.collection("posts")
       .doc(auth.currentUser.uid)
@@ -36,30 +40,15 @@ export function fetchUserPosts() {
       .onSnapshot((snapshot) => {
         let posts = snapshot.docs.map((doc) => {
           const data = doc.data();
-          const doc_id = doc.id;
+          const uid = doc.id;
 
-          return { doc_id, ...data };
+          return { uid, ...data };
         });
         dispatch({
           type: USER_POSTS_STATE_CHANGE,
           posts,
         });
       });
-    // .then((snapshot) => {
-    //   let posts = snapshot.docs.map((doc) => {
-    //     const data = doc.data();
-    //     const doc_id = doc.id;
-
-    //     return { doc_id, ...data };
-    //   });
-    //   dispatch({
-    //     type: USER_POSTS_STATE_CHANGE,
-    //     posts,
-    //   });
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    // });
   };
 }
 

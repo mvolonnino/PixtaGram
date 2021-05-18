@@ -20,12 +20,9 @@ const App = ({ navigation }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     auth.onAuthStateChanged((authUser) => {
-      console.log({ authUser });
-      if (!authUser) {
-        setIsLoading(false);
-        setLoggedIn(false);
-      } else {
+      if (authUser) {
         setIsLoading(false);
         setLoggedIn(true);
       }
@@ -46,6 +43,7 @@ const App = ({ navigation }) => {
                 name="Feed"
                 component={Main}
                 options={{ headerShown: false }}
+                navigation={navigation}
               />
               <Stack.Screen
                 name="Add"
