@@ -38,6 +38,8 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
   }, [route.params.profile.uid]);
 
   useEffect(() => {
+    setUser(null);
+    setUserPosts([]);
     if (passedUID === auth.currentUser.uid) {
       setUser(currentUser);
       setUserPosts(posts);
@@ -79,11 +81,6 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
     <View style={styles.container}>
       {loading ? (
         <ProfileSkeleton />
-      ) : userPosts.length === 0 ? (
-        <View style={styles.noPostContainer}>
-          <FontAwesome name="frown-o" size={60} />
-          <Text>No Posts To Show!</Text>
-        </View>
       ) : (
         <>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -109,6 +106,15 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
               <Text>{user?.email}</Text>
             </View>
           </View>
+        </>
+      )}
+      {userPosts.length === 0 && !loading ? (
+        <View style={styles.noPostContainer}>
+          <FontAwesome name="frown-o" size={60} />
+          <Text>No Posts To Show!</Text>
+        </View>
+      ) : (
+        !loading && (
           <View style={styles.postsContainer}>
             <FlatList
               numColumns={3}
@@ -125,7 +131,7 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
               keyExtractor={(item) => item.uid}
             />
           </View>
-        </>
+        )
       )}
       <View>
         <Button title="Logout" onPress={() => signOutUser()} />

@@ -1,6 +1,7 @@
 import db from "../firebaseConfig";
 
-const fetchSearchUserPosts = (uid) => {
+const fetchSearchUserInfo = (uid) => {
+  console.log("fetching user info => ", uid);
   const results = db
     .collection("users")
     .doc(uid)
@@ -19,4 +20,4 @@ const fetchSearchUserPosts = (uid) => {
   return results;
 };
 
-export default fetchSearchUserPosts;
+export default fetchSearchUserInfo;

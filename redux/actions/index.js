@@ -7,7 +7,7 @@ import {
 } from "../constants/index";
 
 export function fetchUser() {
-  console.log("fetching user info...");
+  console.log("fetching user info...", auth.currentUser.uid);
 
   return (dispatch) => {
     db.collection("users")
@@ -30,7 +30,7 @@ export function fetchUser() {
 }
 
 export function fetchUserPosts() {
-  console.log("fetching user posts...");
+  console.log("fetching user posts...", auth.currentUser.uid);
 
   return (dispatch) => {
     db.collection("posts")
