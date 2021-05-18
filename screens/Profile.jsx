@@ -8,7 +8,12 @@ import { Avatar } from "react-native-elements";
 import { fetchUserPosts, signOutUser } from "../redux/actions";
 import { ProfileSkeleton } from "../components/app";
 import db, { auth } from "../firebaseConfig";
-import { fetchSearchUserPosts, fetchSearchUserInfo } from "../helpers";
+import {
+  fetchSearchUserPosts,
+  fetchSearchUserInfo,
+  handleUnFollow,
+  handleFollow,
+} from "../helpers";
 
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
@@ -29,6 +34,7 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [passedUID, setPassedUID] = useState(route.params.profile.uid);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     setUser(null);
@@ -104,6 +110,32 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
             <View style={styles.infoContainer}>
               <Text>{user?.displayName}</Text>
               <Text>{user?.email}</Text>
+
+              {passedUID !== auth.currentUser.uid && (
+                <View>
+                  {isFollowing ? (
+                    <View style={styles.followBtn}>
+                      <Button
+                        title="UNFOLLOW"
+                        color="white"
+                        onPress={() =>
+                          handleUnFollow(auth.currentUser.uid, passedUID)
+                        }
+                      />
+                    </View>
+                  ) : (
+                    <View style={styles.followBtn}>
+                      <Button
+                        title="FOLLOW"
+                        color="white"
+                        onPress={() =>
+                          handleFollow(auth.currentUser.uid, passedUID)
+                        }
+                      />
+                    </View>
+                  )}
+                </View>
+              )}
             </View>
           </View>
         </>
@@ -166,6 +198,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#051426",
     margin: 1,
+  },
+  followBtn: {
+    borderColor: "white",
+    borderRadius: 10,
+    backgroundColor: "#051426",
+    color: "white",
+    margin: 5,
   },
 });
 
