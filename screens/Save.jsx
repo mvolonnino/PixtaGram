@@ -5,8 +5,10 @@ import db, { auth } from "../firebaseConfig";
 require("firebase/firestore");
 require("firebase/firebase-storage");
 import uuid from "uuid";
+import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
 import { AnimatedUpload } from "../components/app";
+import { compressImage } from "../helpers";
 
 const Save = (props) => {
   const { image } = props.route.params;
@@ -15,9 +17,8 @@ const Save = (props) => {
 
   const handleUploadImage = async () => {
     const id = uuid.v4();
-    const response = await fetch(image);
-    const blob = await response.blob();
     const childPath = `post/${auth.currentUser.uid}/${id}`;
+    const blob = await compressImage(image);
 
     setUploading(true);
 
@@ -52,6 +53,12 @@ const Save = (props) => {
       .then(() => {
         props.navigation.popToTop();
         setUploading(false);
+      })
+      .then(() => {
+        console.log("post saved successfully!");
+      })
+      .catch((err) => {
+        console.log("error saving post => ", err);
       });
   };
 

@@ -20,9 +20,11 @@ const App = ({ navigation }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
     auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
+      if (!authUser) {
+        setIsLoading(false);
+        setLoggedIn(false);
+      } else {
         setIsLoading(false);
         setLoggedIn(true);
       }

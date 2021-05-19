@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, FlatList, StyleSheet, Button } from "react-native";
+import { View, Text, Image, FlatList, StyleSheet } from "react-native";
+import { Button } from "react-native-elements";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Avatar } from "react-native-elements";
 
-import { fetchUserPosts, signOutUser } from "../redux/actions";
+import { signOutUser } from "../redux/actions";
 import { ProfileSkeleton } from "../components/app";
-import db, { auth } from "../firebaseConfig";
+import { auth } from "../firebaseConfig";
 import {
   fetchSearchUserPosts,
   fetchSearchUserInfo,
@@ -18,23 +19,31 @@ import {
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
   posts: store.userState.posts,
+  following: store.userState.following,
 });
 
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
     {
-      fetchUserPosts,
       signOutUser,
     },
     dispatch
   );
 
-const Profile = ({ signOutUser, posts, currentUser, route }) => {
+const Profile = ({ signOutUser, posts, currentUser, following, route }) => {
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [passedUID, setPassedUID] = useState(route.params.profile.uid);
   const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    if (following.indexOf(route.params.profile.uid) > -1) {
+      setIsFollowing(true);
+    } else {
+      setIsFollowing(false);
+    }
+  }, [following]);
 
   useEffect(() => {
     setUser(null);
@@ -46,7 +55,7 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
   useEffect(() => {
     setUser(null);
     setUserPosts([]);
-    if (passedUID === auth.currentUser.uid) {
+    if (passedUID === auth?.currentUser?.uid) {
       setUser(currentUser);
       setUserPosts(posts);
     } else {
@@ -60,21 +69,18 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
         });
       fetchSearchUserPosts(passedUID)
         .then((res) => {
+          console.log(res);
           setUserPosts(res);
         })
         .catch((error) => {
           console.log({ error });
         });
     }
-  }, [passedUID]);
+  }, [passedUID, posts]);
 
   useEffect(() => {
     if (posts.length === 0) {
-      fetchUserPosts();
-
-      if (posts.length === 0) {
-        setLoading(false);
-      }
+      setLoading(false);
     }
     if (posts.length > 0) {
       setTimeout(() => {
@@ -111,28 +117,28 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
               <Text>{user?.displayName}</Text>
               <Text>{user?.email}</Text>
 
-              {passedUID !== auth.currentUser.uid && (
+              {passedUID !== auth?.currentUser?.uid && (
                 <View>
                   {isFollowing ? (
-                    <View style={styles.followBtn}>
-                      <Button
-                        title="UNFOLLOW"
-                        color="white"
-                        onPress={() =>
-                          handleUnFollow(auth.currentUser.uid, passedUID)
-                        }
-                      />
-                    </View>
+                    <Button
+                      title="UNFOLLOW"
+                      color="white"
+                      onPress={() =>
+                        handleUnFollow(auth?.currentUser?.uid, passedUID)
+                      }
+                      titleStyle={{ fontSize: 12 }}
+                      buttonStyle={styles.followBtn}
+                    />
                   ) : (
-                    <View style={styles.followBtn}>
-                      <Button
-                        title="FOLLOW"
-                        color="white"
-                        onPress={() =>
-                          handleFollow(auth.currentUser.uid, passedUID)
-                        }
-                      />
-                    </View>
+                    <Button
+                      title="FOLLOW"
+                      color="white"
+                      onPress={() =>
+                        handleFollow(auth?.currentUser?.uid, passedUID)
+                      }
+                      titleStyle={{ fontSize: 12 }}
+                      buttonStyle={styles.followBtn}
+                    />
                   )}
                 </View>
               )}
@@ -165,9 +171,14 @@ const Profile = ({ signOutUser, posts, currentUser, route }) => {
           </View>
         )
       )}
-      <View>
-        <Button title="Logout" onPress={() => signOutUser()} />
-      </View>
+
+      {passedUID === auth?.currentUser?.uid && (
+        <Button
+          title="Logout"
+          onPress={() => signOutUser()}
+          buttonStyle={styles.followBtn}
+        />
+      )}
     </View>
   );
 };
@@ -203,7 +214,6 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 10,
     backgroundColor: "#051426",
-    color: "white",
     margin: 5,
   },
 });
