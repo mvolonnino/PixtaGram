@@ -64,6 +64,7 @@ const Feed = ({ currentUser, following, usersLoaded, users, route }) => {
             <View style={styles.imageContainer}>
               <Text style={styles.userName}>{item.user.displayName}</Text>
               <Image source={{ uri: item.downloadURL }} style={styles.image} />
+              <Text style={styles.userName}>{item.caption}</Text>
             </View>
           )}
           keyExtractor={(item) => item.uid}
