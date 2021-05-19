@@ -126,15 +126,13 @@ export function fetchUsersFollowingPosts(uid) {
         //   uid,
         // });
 
-        const findUser = getState().usersState.users.find(
-          (user) => user.uid === uid
-        );
+        const user = getState().usersState.users.find((el) => el.uid === uid);
 
         let posts = snapshot.docs.map((doc) => {
           const data = doc.data();
           const uid = doc.id;
 
-          return { uid, ...data, findUser };
+          return { uid, ...data, user };
         });
         dispatch({
           type: USERS_POSTS_STATE_CHANGE,
