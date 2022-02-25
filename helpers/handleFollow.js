@@ -5,7 +5,8 @@ const handleFollow = (currentUserUID, passedUID) => {
     .doc(currentUserUID)
     .collection("userFollowing")
     .doc(passedUID)
-    .set({});
+    .set({})
+    .catch((error) => console.log("error following user => ", { error }));
 };
 
 export default handleFollow;

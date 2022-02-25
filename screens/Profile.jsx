@@ -142,6 +142,14 @@ const Profile = ({ signOutUser, posts, currentUser, following, route }) => {
                   )}
                 </View>
               )}
+              {passedUID === auth?.currentUser?.uid && (
+                <Button
+                  title="Logout"
+                  onPress={() => signOutUser()}
+                  buttonStyle={styles.logoutBtn}
+                  titleStyle={{ fontSize: 12 }}
+                />
+              )}
             </View>
           </View>
         </>
@@ -170,14 +178,6 @@ const Profile = ({ signOutUser, posts, currentUser, following, route }) => {
             />
           </View>
         )
-      )}
-
-      {passedUID === auth?.currentUser?.uid && (
-        <Button
-          title="Logout"
-          onPress={() => signOutUser()}
-          buttonStyle={styles.followBtn}
-        />
       )}
     </View>
   );
@@ -215,6 +215,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#051426",
     margin: 5,
+  },
+  logoutBtn: {
+    width: 120,
+    backgroundColor: "#051426",
+    margin: 5,
+    borderRadius: 10,
   },
 });
 

@@ -31,27 +31,41 @@ const mapDispatchProps = (dispatch) =>
     dispatch
   );
 
-const Feed = ({ currentUser, following, usersLoaded, users, route }) => {
+const Feed = ({ following, usersLoaded, users }) => {
   const [posts, setPosts] = useState([]);
+  console.log(
+    { usersLoaded },
+    { following },
+    following.length,
+    { posts },
+    { users }
+  );
 
   useEffect(() => {
-    let posts = [];
+    let firestorePosts = [];
     if (usersLoaded == following.length) {
       for (let i = 0; i < following.length; i++) {
         const user = users.find((el) => el.uid === following[i]);
 
         if (user !== undefined) {
-          posts = [...posts, ...user.posts];
+          firestorePosts = [...firestorePosts, ...user.posts];
         }
       }
 
-      posts.sort(function (x, y) {
+      firestorePosts.sort(function (x, y) {
         return x.createdAt < y.createdAt;
       });
 
-      setPosts(posts);
+      setPosts(firestorePosts);
+    } else if (usersLoaded > following.length) {
+      const userArr = [];
+      posts.map((post, i) => {
+        const user = post.user;
+        if (user.uid === following) userArr.push(post);
+      });
+      console.log(userArr);
     }
-  }, [usersLoaded]);
+  }, [usersLoaded, following]);
 
   return (
     <View style={styles.container}>
